@@ -22,17 +22,17 @@ while (have_posts()) {
     <div class="generic-content"> <?php the_content(); ?></div>
     <div class="acf-map">
         <?php
-         
+
             $mapLocation = get_field('map_location');
-        ?>
+            ?>
         <div class="marker" data-lat="<?php echo $mapLocation['lat']; ?>" data-lng="<?php echo $mapLocation['lng']; ?>">
             <h3> <a href="#"><?php the_title(); ?></a></h3>
             <?php echo $mapLocation['address']; ?>
         </div>
 
 
-        <?php        
-        ?>
+        <?php
+            ?>
     </div>
     <?php
         $relatedPrograms = new WP_Query(array(
@@ -65,10 +65,10 @@ while (have_posts()) {
             echo '</ul>';
         }
 
-        
 
 
-         ?>
+
+        ?>
 
 </div>
 <?php }
