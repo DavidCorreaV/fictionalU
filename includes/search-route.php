@@ -29,6 +29,25 @@ function university_register_search()
                     } else {
                         $eventDate = new DateTime(get_the_date());
                     }
+
+                    if (get_post_type() == 'program') {
+                        $related_Campuses = get_field('related_campus');
+                        if ($related_Campuses) {
+                            foreach ($related_Campuses as $campus) {
+                                array_push($results['campus'], array(
+                                    'id' => get_the_ID($campus),
+                                    'type' => get_post_type($campus),
+                                    'title' => get_the_title($campus),
+                                    'URL' => get_the_permalink($campus),
+                                    'day' => $eventDate->format('d'),
+                                    'month' => $eventDate->format('M'),
+                                    'excerpt' => wp_trim_words(get_the_excerpt($campus), 18)
+
+                                ));
+                            }
+                        }
+                    }
+
                     array_push($results[get_post_type()], array(
                         'id' => get_the_ID(),
                         'type' => get_post_type(),
@@ -42,34 +61,45 @@ function university_register_search()
                     ));
                 }
             }
-            $programRelat = new WP_Query(array(
-                'post_type' => 'professor',
-                'meta_query' => array(
-                    array(
+            if ($results['program']) {
+                $programsMeta = array(
+                    'relation' => 'OR'
+                );
+
+                foreach ($results['program'] as $item) {
+                    array_push($programsMeta, array(
                         'key' => 'related_Programs',
                         'compare' => 'LIKE',
-                        'value' => '"67"'
-                    )
-                )
-            ));
+                        'value' => '"' . $item['id'] . '"'
 
-            while ($programRelat->have_posts()) {
-                $programRelat->the_post();
-                array_push($results[get_post_type()], array(
-                    'id' => get_the_ID(),
-                    'type' => get_post_type(),
-                    'title' => get_the_title(),
-                    'URL' => get_the_permalink(),
-                    'image' => get_the_post_thumbnail_URL(0, 'professorLandscape'),
-                    'day' => $eventDate->format('d'),
-                    'month' => $eventDate->format('M'),
-                    'excerpt' => wp_trim_words(get_the_excerpt(), 18)
+                    ));
+                }
 
 
-
+                $programRelat = new WP_Query(array(
+                    'post_type' => array('professor', 'event'),
+                    'meta_query' => $programsMeta
                 ));
+
+                while ($programRelat->have_posts()) {
+                    $programRelat->the_post();
+                    array_push($results[get_post_type()], array(
+                        'id' => get_the_ID(),
+                        'type' => get_post_type(),
+                        'title' => get_the_title(),
+                        'URL' => get_the_permalink(),
+                        'image' => get_the_post_thumbnail_URL(0, 'professorLandscape'),
+                        'day' => $eventDate->format('d'),
+                        'month' => $eventDate->format('M'),
+                        'excerpt' => wp_trim_words(get_the_excerpt(), 18)
+
+
+
+                    ));
+                }
+                $results['professor'] = array_values(array_unique($results['professor'], SORT_REGULAR));
+                $results['event'] = array_values(array_unique($results['event'], SORT_REGULAR));
             }
-            $results['professor'] = array_values(array_unique($results['professor'], SORT_REGULAR));
             return $results;
         }
     ));

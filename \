@@ -1,0 +1,85 @@
+<?php function university_post_types()
+{
+    register_post_type('event', array(
+        'supports' => array('title', 'editor', 'excerpt'),
+        'public' => true,
+        'rewrite' => array('slug' => 'events'),
+        'show_in_rest' => true,
+        'labels' => array(
+            'name' => 'Events',
+            'add_new_item' => 'Add new Event',
+            'edit_item' => 'Edit Event',
+            'all_items' => 'All Events',
+            'singular_name' => 'Event',
+
+        ),
+        'menu_icon' => 'dashicons-calendar-alt',
+        'has_archive' => true
+    ));
+    register_post_type('campus', array(
+        'supports' => array('title', 'editor', 'excerpt'),
+        'public' => true,
+        'rewrite' => array('slug' => 'campuses'),
+        'show_in_rest' => true,
+        'labels' => array(
+            'name' => 'Campuses',
+            'add_new_item' => 'Add new Campus',
+            'edit_item' => 'Edit Campus',
+            'all_items' => 'All Campuses',
+            'singular_name' => 'Campus',
+
+        ),
+        'menu_icon' => 'dashicons-location-alt',
+        'has_archive' => true
+    ));
+
+    register_post_type('professor', array(
+        'supports' => array('title', 'editor', 'excerpt', 'thumbnail'),
+        'public' => true,
+        'show_in_rest' => true,
+        'labels' => array(
+            'name' => 'Professors',
+            'add_new_item' => 'Add new Professor',
+            'edit_item' => 'Edit Professor',
+            'all_items' => 'All Professors',
+            'singular_name' => 'Professor',
+
+        ),
+        'menu_icon' => 'dashicons-businessperson',
+        'has_archive' => true
+    ));
+    register_post_type('program', array(
+        'supports' => array('title', 'editor'),
+        'public' => true,
+        'rewrite' => array('slug' => 'programs'),
+        'show_in_rest' => true,
+        'labels' => array(
+            'name' => 'Programs',
+            'add_new_item' => 'Add new Program',
+            'edit_item' => 'Edit Program',
+            'all_items' => 'All Programs',
+            'singular_name' => 'Program',
+
+        ),
+        'menu_icon' => 'dashicons-welcome-learn-more',
+        'has_archive' => true
+    ));
+    register_post_type('note', array(
+        'supports' => array('title', 'editor', 'excerpt'),
+        'public' => false,
+        'show_ui' => true,
+        'show_in_rest' => true,
+        'labels' => array(
+            'name' => 'Notes',
+            'add_new_item' => 'Add new Note',
+            'edit_item' => 'Edit Notes',
+            'all_items' => 'All Notes',
+            'singular_name' => 'Note',
+
+        ),
+        'menu_icon' => 'dashicons-welcome-write-blog',
+        'has_archive' => true
+    ));
+}
+
+add_action('init', 'university_post_types');

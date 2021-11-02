@@ -178,6 +178,7 @@ class Search {
     document.querySelector("body").classList.add("body-no-scroll");
     this.isOpen = true;
     setTimeout(() => this.searchField.focus(), 100);
+    return false;
   };
 
   closeOverlay = () => {
