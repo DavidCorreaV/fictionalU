@@ -10,22 +10,27 @@ class myNotes {
   events() {
     this.deleteButton.addEventListener("click", (e) => {
       e.preventDefault();
-      e.target.className.match("delete-note") && this.deleteNote(e);
+      e.target.className == "delete-note" && this.deleteNote(e);
     });
     this.editButton.addEventListener("click", (e) => {
       e.preventDefault();
-      e.target.className.match("edit-note") && this.editNote(e);
+      if (e.target.className == "edit-note") {
+        this.editNote(e);
+        this.updateButton.addEventListener("click", (e) => {
+          e.preventDefault();
+          console.log(e);
+          e.target.className.match("update-note") && console.log("OK");
+        });
+      }
     });
-    this.updateButton.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.target.className.match("update-note") && this.updateNote(e);
-    });
+
     this.submitButton.addEventListener("click", (e) => {
       e.preventDefault();
-      e.target.className.match("submit-note") && this.createNote(e);
+      e.target.className == "submit-note" && this.createNote(e);
     });
   }
   createNote = (e) => {
+    console.log(e);
     const newPost = {
       status: "publish",
       title: document.querySelector(".new-note-title").value,
@@ -50,6 +55,7 @@ class myNotes {
     (async () => {
       try {
         const obj = await load();
+        console.log(obj);
         document
           .querySelectorAll(".new-note-title, .new-note-body")
           .forEach((e) => {
@@ -57,6 +63,7 @@ class myNotes {
           });
         const addedPost = document.createElement("li");
         addedPost.innerHTML = `
+<li data-id="${obj.id}">
                     <input readonly class="note-title-field" value='${obj.title.rendered}'>
 
                     <span class="edit-note"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</span>
@@ -65,9 +72,9 @@ class myNotes {
 ${obj.content.raw}
                     </textarea>
                     <span class="update-note btn btn--blue btn--small"><i class="fa fa-arrow-right" aria-hidden="true"></i> Save</span>
+                </li>
 
           `;
-        addedPost.setAttribute("data-id", obj.id);
         document.querySelector("#my-notes").prepend(addedPost);
       } catch (e) {
         console.log(e);
@@ -96,11 +103,13 @@ ${obj.content.raw}
         universityData.root_url + "/wp-json/wp/v2/note/" + thisNote.dataset.id;
 
       const obj = await (await fetch(url, opts)).json();
+      console.log(obj);
       return obj;
     }
     (async () => {
       try {
         const obj = await load();
+        console.log(obj);
         this.makeNoteReadOnly(thisNote);
       } catch (e) {
         console.log(e);
